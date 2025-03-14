@@ -13,7 +13,7 @@ A Pluto notebook can be found here: [Notebook.](cpt-pile)
 
 ### [Numerical conformal mapping](conformal-map)
 
-A notebook showing a mapping of a unit disk to an arbitary shaped polygon. The process follows an algorithm described in:
+A notebook showing a mapping of the unit disk to an arbitary shaped polygon. The process follows an algorithm described in:
 
 - _Schwarz Christoffel Mapping_ by Driscoll and Trefethen (2005).
 
