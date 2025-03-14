@@ -19,7 +19,7 @@ A notebook showing a mapping of a unit disk to an arbitary shaped polygon. The p
 
 Future ideas include the generation of flow nets for confined groundwater flow beneath sheet piles.
 
-### [Southern hemisphere satellite imagery](https://www.ortons-weatherapp.vercel.app)
+### [Southern hemisphere satellite imagery](https://ortons-weatherapp.vercel.app)
 
 This is an app I created which provides live 24hr satellite data based on images provided by the Japan Meteorological Agency.
 
