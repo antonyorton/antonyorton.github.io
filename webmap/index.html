@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My first PostGIS webmap</title>
     <script src="https://unpkg.com/maplibre-gl@^5.4.0/dist/maplibre-gl.js"></script>
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.umd.min.js"></script>
     <link href="https://unpkg.com/maplibre-gl@^5.4.0/dist/maplibre-gl.css" rel="stylesheet" />
     <style>
       body {
@@ -21,11 +22,31 @@
   </head>
   <body>
     <div id="map"></div>
+    <!-- <script src="https://unpkg.com/maplibre-contour@0.0.5/dist/index.min.js"></script> -->
+
     <script>
       // const pg_tileserv_host = 'http://localhost:7800'
       const pg_tileserv_host = 'https://pg-tileserv.whitegrass-e74755b7.australiaeast.azurecontainerapps.io/'
 
+      // maptilersdk.config.apiKey = 'Hj3tjbf2HFoJERYiun3m'
+
+      // const demSource = new mlcontour.DemSource({
+      //   url: 'https://api.ellipsis-drive.com/v3/path/085f5e10-63b6-4e8f-a4c6-dce9689100d3/raster/timestamp/3179fa80-60ad-41c7-ae67-cdd5eeeca693/tile/{z}/{x}/{y}.pbf',
+      //   //NOT WORKING - NEED TO SERVE RASTER TILES SOMEHOW
+      //   // url: `${pg_tileserv_host}/public.demelevation/{z}/{x}/{y}.pbf`,
+      //   encoding: 'terrarium',
+      //   maxzoom: 12,
+      //   // offload contour line computation to a web worker
+      //   worker: true
+      // })
+
+      // // calls maplibregl.addProtocol to register a dynamic vector tile provider that
+      // // downloads raster-dem tiles, computes contour lines, and encodes as a vector
+      // // tile for each tile request from maplibre
+      // demSource.setupMaplibre(maplibregl)
+
       const map = (window.map = new maplibregl.Map({
+        // const map = new maptilersdk.Map({
         container: 'map',
         zoom: 12,
         center: [151.2, -33.8],
@@ -36,7 +57,11 @@
           sources: {
             osm: {
               type: 'raster',
-              tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+              // Excellent source-guide:
+              // https://medium.com/@daniel_819/the-10-best-free-to-use-map-layers-8c8e1b4ad0a
+              //
+              // tiles: ['https://a.tile.opentopomap.org/{z}/{x}/{y}.png'],
+              tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
               tileSize: 256,
               attribution: '&copy; OpenStreetMap Contributors',
               maxzoom: 19
@@ -59,11 +84,27 @@
               minzoom: 3,
               maxzoom: 16
             }
-            // 'public.elev_contours': {
+            // contourSourceFeet: {
             //   type: 'vector',
-            //   tiles: [`${pg_tileserv_host}/public.elev_contours/{z}/{x}/{y}.pbf`],
-            //   minzoom: 12,
-            //   maxzoom: 18
+            //   tiles: [
+            //     demSource.contourProtocolUrl({
+            //       // meters to feet
+            //       multiplier: 3.28084,
+            //       overzoom: 1,
+            //       thresholds: {
+            //         // zoom: [minor, major]
+            //         11: [200, 1000],
+            //         12: [100, 500],
+            //         13: [100, 500],
+            //         14: [50, 200],
+            //         15: [20, 100]
+            //       },
+            //       elevationKey: 'ele',
+            //       levelKey: 'level',
+            //       contourLayer: 'contours'
+            //     })
+            //   ],
+            //   maxzoom: 15
             // }
           },
           layers: [
@@ -105,19 +146,46 @@
               }
             }
             // {
-            //   id: 'public.elev_contours',
+            //   id: 'contours',
             //   type: 'line',
-            //   source: 'public.elev_contours',
-            //   'source-layer': 'public.elev_contours',
-            //   paint: {ras
-            //     'line-width': 0.3,
-            //     'line-color': 'grey'
+            //   source: 'contourSourceFeet',
+            //   'source-layer': 'contours',
+            //   paint: {
+            //     'line-opacity': 0.5,
+            //     // "major" contours have level=1, "minor" have level=0
+            //     'line-width': ['match', ['get', 'level'], 1, 1, 0.5]
+            //   }
+            // },
+            // {
+            //   id: 'contour-text',
+            //   type: 'symbol',
+            //   source: 'contourSourceFeet',
+            //   'source-layer': 'contours',
+            //   filter: ['>', ['get', 'level'], 0],
+            //   paint: {
+            //     'text-halo-color': 'white',
+            //     'text-halo-width': 1
+            //   },
+            //   layout: {
+            //     'symbol-placement': 'line',
+            //     'text-size': 10,
+            //     'text-field': ['concat', ['number-format', ['get', 'ele'], {}], "'"],
+            //     'text-font': ['Noto Sans Bold']
             //   }
             // }
           ]
         },
         maxzoom: 18
       }))
+      // Add geolocate control to the map.
+      map.addControl(
+        new maplibregl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true
+          },
+          trackUserLocation: true
+        })
+      )
     </script>
   </body>
 </html>
