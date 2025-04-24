@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My first PostGIS webmap</title>
     <script src="https://unpkg.com/maplibre-gl@^5.4.0/dist/maplibre-gl.js"></script>
-    <!-- <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.umd.min.js"></script> -->
     <link href="https://unpkg.com/maplibre-gl@^5.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <!-- <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.umd.min.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.css" rel="stylesheet" /> -->
     <style>
       body {
         margin: 0;
@@ -22,29 +23,15 @@
   </head>
   <body>
     <div id="map"></div>
-    <script src="https://unpkg.com/maplibre-contour@0.1.0/dist/index.min.js"></script>
+    <!-- <script src="https://unpkg.com/maplibre-contour@0.1.0/dist/index.min.js"></script> -->
 
     <script>
       // const pg_tileserv_host = 'http://localhost:7800'
 
       const pg_tileserv_host = 'https://pg-tileserv.whitegrass-e74755b7.australiaeast.azurecontainerapps.io/'
 
-      const my_maptiler_key = 'Hj3tjbf2HFoJERYiun3m'
-
+      // const my_maptiler_key = 'Hj3tjbf2HFoJERYiun3m'
       // maptilersdk.config.apiKey = 'Hj3tjbf2HFoJERYiun3m'
-
-      const demSource = new mlcontour.DemSource({
-        url: `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${my_maptiler_key}`,
-        encoding: 'mapbox',
-        maxzoom: 12,
-        // offload contour line computation to a web worker
-        worker: true
-      })
-
-      // calls maplibregl.addProtocol to register a dynamic vector tile provider that
-      // downloads raster-dem tiles, computes contour lines, and encodes as a vector
-      // tile for each tile request from maplibre
-      demSource.setupMaplibre(maplibregl)
 
       const map = (window.map = new maplibregl.Map({
         // const map = new maptilersdk.Map({
@@ -150,7 +137,7 @@
               'source-layer': 'public.dem_clip_syd_north',
               paint: {
                 'line-width': 0.6,
-                'line-opacity': 0.4,
+                'line-opacity': 0.3,
                 'line-color': 'brown'
               }
             },
@@ -161,7 +148,7 @@
               'source-layer': 'public.dem_clip_dharug',
               paint: {
                 'line-width': 0.6,
-                'line-opacity': 0.4,
+                'line-opacity': 0.3,
                 'line-color': 'brown'
               }
             },
@@ -172,14 +159,15 @@
               'source-layer': 'public.dem_clip_watagans',
               paint: {
                 'line-width': 0.6,
-                'line-opacity': 0.4,
+                'line-opacity': 0.3,
                 'line-color': 'brown'
               }
             }
-          ]
-        },
-        maxzoom: 18
+          ],
+          maxzoom: 18
+        }
       }))
+
       // Add geolocate control to the map.
       map.addControl(
         new maplibregl.GeolocateControl({
