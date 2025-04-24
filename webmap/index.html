@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My first PostGIS webmap</title>
     <script src="https://unpkg.com/maplibre-gl@^5.4.0/dist/maplibre-gl.js"></script>
-    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.umd.min.js"></script>
+    <!-- <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.umd.min.js"></script> -->
     <link href="https://unpkg.com/maplibre-gl@^5.4.0/dist/maplibre-gl.css" rel="stylesheet" />
     <style>
       body {
@@ -22,28 +22,29 @@
   </head>
   <body>
     <div id="map"></div>
-    <!-- <script src="https://unpkg.com/maplibre-contour@0.0.5/dist/index.min.js"></script> -->
+    <script src="https://unpkg.com/maplibre-contour@0.1.0/dist/index.min.js"></script>
 
     <script>
       // const pg_tileserv_host = 'http://localhost:7800'
+
       const pg_tileserv_host = 'https://pg-tileserv.whitegrass-e74755b7.australiaeast.azurecontainerapps.io/'
+
+      const my_maptiler_key = 'Hj3tjbf2HFoJERYiun3m'
 
       // maptilersdk.config.apiKey = 'Hj3tjbf2HFoJERYiun3m'
 
-      // const demSource = new mlcontour.DemSource({
-      //   url: 'https://api.ellipsis-drive.com/v3/path/085f5e10-63b6-4e8f-a4c6-dce9689100d3/raster/timestamp/3179fa80-60ad-41c7-ae67-cdd5eeeca693/tile/{z}/{x}/{y}.pbf',
-      //   //NOT WORKING - NEED TO SERVE RASTER TILES SOMEHOW
-      //   // url: `${pg_tileserv_host}/public.demelevation/{z}/{x}/{y}.pbf`,
-      //   encoding: 'terrarium',
-      //   maxzoom: 12,
-      //   // offload contour line computation to a web worker
-      //   worker: true
-      // })
+      const demSource = new mlcontour.DemSource({
+        url: `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${my_maptiler_key}`,
+        encoding: 'mapbox',
+        maxzoom: 12,
+        // offload contour line computation to a web worker
+        worker: true
+      })
 
-      // // calls maplibregl.addProtocol to register a dynamic vector tile provider that
-      // // downloads raster-dem tiles, computes contour lines, and encodes as a vector
-      // // tile for each tile request from maplibre
-      // demSource.setupMaplibre(maplibregl)
+      // calls maplibregl.addProtocol to register a dynamic vector tile provider that
+      // downloads raster-dem tiles, computes contour lines, and encodes as a vector
+      // tile for each tile request from maplibre
+      demSource.setupMaplibre(maplibregl)
 
       const map = (window.map = new maplibregl.Map({
         // const map = new maptilersdk.Map({
@@ -54,6 +55,7 @@
         hash: true,
         style: {
           version: 8,
+          glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
           sources: {
             osm: {
               type: 'raster',
@@ -83,29 +85,25 @@
               tiles: [`${pg_tileserv_host}/public.nsw_localities/{z}/{x}/{y}.pbf`],
               minzoom: 3,
               maxzoom: 16
+            },
+            'public.dem_clip_syd_north': {
+              type: 'vector',
+              tiles: [`${pg_tileserv_host}/public.dem_clip_syd_north/{z}/{x}/{y}.pbf`],
+              minzoom: 11,
+              maxzoom: 16
+            },
+            'public.dem_clip_dharug': {
+              type: 'vector',
+              tiles: [`${pg_tileserv_host}/public.dem_clip_dharug/{z}/{x}/{y}.pbf`],
+              minzoom: 11,
+              maxzoom: 16
+            },
+            'public.dem_clip_watagans': {
+              type: 'vector',
+              tiles: [`${pg_tileserv_host}/public.dem_clip_watagans/{z}/{x}/{y}.pbf`],
+              minzoom: 11,
+              maxzoom: 16
             }
-            // contourSourceFeet: {
-            //   type: 'vector',
-            //   tiles: [
-            //     demSource.contourProtocolUrl({
-            //       // meters to feet
-            //       multiplier: 3.28084,
-            //       overzoom: 1,
-            //       thresholds: {
-            //         // zoom: [minor, major]
-            //         11: [200, 1000],
-            //         12: [100, 500],
-            //         13: [100, 500],
-            //         14: [50, 200],
-            //         15: [20, 100]
-            //       },
-            //       elevationKey: 'ele',
-            //       levelKey: 'level',
-            //       contourLayer: 'contours'
-            //     })
-            //   ],
-            //   maxzoom: 15
-            // }
           },
           layers: [
             {
@@ -144,35 +142,40 @@
                 'line-width': 0.7,
                 'line-color': 'grey'
               }
+            },
+            {
+              id: 'public.dem_clip_syd_north',
+              type: 'line',
+              source: 'public.dem_clip_syd_north',
+              'source-layer': 'public.dem_clip_syd_north',
+              paint: {
+                'line-width': 0.6,
+                'line-opacity': 0.4,
+                'line-color': 'brown'
+              }
+            },
+            {
+              id: 'public.dem_clip_dharug',
+              type: 'line',
+              source: 'public.dem_clip_dharug',
+              'source-layer': 'public.dem_clip_dharug',
+              paint: {
+                'line-width': 0.6,
+                'line-opacity': 0.4,
+                'line-color': 'brown'
+              }
+            },
+            {
+              id: 'public.dem_clip_watagans',
+              type: 'line',
+              source: 'public.dem_clip_watagans',
+              'source-layer': 'public.dem_clip_watagans',
+              paint: {
+                'line-width': 0.6,
+                'line-opacity': 0.4,
+                'line-color': 'brown'
+              }
             }
-            // {
-            //   id: 'contours',
-            //   type: 'line',
-            //   source: 'contourSourceFeet',
-            //   'source-layer': 'contours',
-            //   paint: {
-            //     'line-opacity': 0.5,
-            //     // "major" contours have level=1, "minor" have level=0
-            //     'line-width': ['match', ['get', 'level'], 1, 1, 0.5]
-            //   }
-            // },
-            // {
-            //   id: 'contour-text',
-            //   type: 'symbol',
-            //   source: 'contourSourceFeet',
-            //   'source-layer': 'contours',
-            //   filter: ['>', ['get', 'level'], 0],
-            //   paint: {
-            //     'text-halo-color': 'white',
-            //     'text-halo-width': 1
-            //   },
-            //   layout: {
-            //     'symbol-placement': 'line',
-            //     'text-size': 10,
-            //     'text-field': ['concat', ['number-format', ['get', 'ele'], {}], "'"],
-            //     'text-font': ['Noto Sans Bold']
-            //   }
-            // }
           ]
         },
         maxzoom: 18
