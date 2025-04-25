@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My first PostGIS webmap</title>
-    <script src="https://unpkg.com/maplibre-gl@^5.4.0/dist/maplibre-gl.js"></script>
-    <link href="https://unpkg.com/maplibre-gl@^5.4.0/dist/maplibre-gl.css" rel="stylesheet" />
-    <!-- <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.umd.min.js"></script>
-    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.css" rel="stylesheet" /> -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Test Maplibre using app.js</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
+  </head>
+  <body>
     <style>
       body {
         margin: 0;
@@ -19,164 +21,12 @@
         bottom: 0;
         width: 100%;
       }
+      .maplibregl-popup {
+        width: 400px;
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      }
     </style>
-  </head>
-  <body>
     <div id="map"></div>
-    <!-- <script src="https://unpkg.com/maplibre-contour@0.1.0/dist/index.min.js"></script> -->
-
-    <script>
-      // const pg_tileserv_host = 'http://localhost:7800'
-
-      const pg_tileserv_host = 'https://pg-tileserv.whitegrass-e74755b7.australiaeast.azurecontainerapps.io/'
-
-      // const my_maptiler_key = 'Hj3tjbf2HFoJERYiun3m'
-      // maptilersdk.config.apiKey = 'Hj3tjbf2HFoJERYiun3m'
-
-      const map = (window.map = new maplibregl.Map({
-        // const map = new maptilersdk.Map({
-        container: 'map',
-        zoom: 12,
-        center: [151.2, -33.8],
-        pitch: 0,
-        hash: true,
-        style: {
-          version: 8,
-          glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
-          sources: {
-            osm: {
-              type: 'raster',
-              // Excellent source-guide:
-              // https://medium.com/@daniel_819/the-10-best-free-to-use-map-layers-8c8e1b4ad0a
-              //
-              // tiles: ['https://a.tile.opentopomap.org/{z}/{x}/{y}.png'],
-              tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-              tileSize: 256,
-              attribution: '&copy; OpenStreetMap Contributors',
-              maxzoom: 19
-            },
-            'public.vic_places': {
-              type: 'vector',
-              tiles: [`${pg_tileserv_host}/public.vic_places/{z}/{x}/{y}.pbf`],
-              minzoom: 3,
-              maxzoom: 16
-            },
-            'public.track_18april2025': {
-              type: 'vector',
-              tiles: [`${pg_tileserv_host}/public.track_18april2025/{z}/{x}/{y}.pbf`],
-              minzoom: 3,
-              maxzoom: 16
-            },
-            'public.nsw_localities': {
-              type: 'vector',
-              tiles: [`${pg_tileserv_host}/public.nsw_localities/{z}/{x}/{y}.pbf`],
-              minzoom: 3,
-              maxzoom: 16
-            },
-            'public.dem_clip_syd_north': {
-              type: 'vector',
-              tiles: [`${pg_tileserv_host}/public.dem_clip_syd_north/{z}/{x}/{y}.pbf`],
-              minzoom: 11,
-              maxzoom: 16
-            },
-            'public.dem_clip_dharug': {
-              type: 'vector',
-              tiles: [`${pg_tileserv_host}/public.dem_clip_dharug/{z}/{x}/{y}.pbf`],
-              minzoom: 11,
-              maxzoom: 16
-            },
-            'public.dem_clip_watagans': {
-              type: 'vector',
-              tiles: [`${pg_tileserv_host}/public.dem_clip_watagans/{z}/{x}/{y}.pbf`],
-              minzoom: 11,
-              maxzoom: 16
-            }
-          },
-          layers: [
-            {
-              id: 'osm',
-              type: 'raster',
-              source: 'osm'
-            },
-            {
-              id: 'public.vic_places',
-              type: 'line',
-              source: 'public.vic_places',
-              'source-layer': 'public.vic_places',
-              type: 'circle',
-              paint: {
-                'circle-radius': 3,
-                'circle-color': 'green',
-                'circle-opacity': 0.5
-              }
-            },
-            {
-              id: 'public.track_18april2025',
-              type: 'line',
-              source: 'public.track_18april2025',
-              'source-layer': 'public.track_18april2025',
-              paint: {
-                'line-width': 3,
-                'line-color': 'red'
-              }
-            },
-            {
-              id: 'public.nsw_localities',
-              type: 'line',
-              source: 'public.nsw_localities',
-              'source-layer': 'public.nsw_localities',
-              paint: {
-                'line-width': 0.7,
-                'line-color': 'grey'
-              }
-            },
-            {
-              id: 'public.dem_clip_syd_north',
-              type: 'line',
-              source: 'public.dem_clip_syd_north',
-              'source-layer': 'public.dem_clip_syd_north',
-              paint: {
-                'line-width': 0.6,
-                'line-opacity': 0.5,
-                'line-color': 'brown'
-              }
-            },
-            {
-              id: 'public.dem_clip_dharug',
-              type: 'line',
-              source: 'public.dem_clip_dharug',
-              'source-layer': 'public.dem_clip_dharug',
-              paint: {
-                'line-width': 0.6,
-                'line-opacity': 0.5,
-                'line-color': 'brown'
-              }
-            },
-            {
-              id: 'public.dem_clip_watagans',
-              type: 'line',
-              source: 'public.dem_clip_watagans',
-              'source-layer': 'public.dem_clip_watagans',
-              paint: {
-                'line-width': 0.6,
-                'line-opacity': 0.5,
-                'line-color': 'brown'
-              }
-            }
-          ],
-          maxzoom: 18
-        }
-      }))
-
-      // Add geolocate control to the map.
-      map.addControl(
-        new maplibregl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true
-          },
-          trackUserLocation: true
-        })
-      )
-    </script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>
