@@ -46,9 +46,15 @@ h3 {
 .video-title {
   padding: 0;
 }
-.videos-container video {
-  border-radius: 10px;
+
+.video-box {
+  display: flex;
   max-width: 800px;
+}
+.video-box video {
+  max-width: 100%;
+  flex-grow: 1;
+  border-radius: 10px;
   box-shadow: 5px 4px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
@@ -57,11 +63,11 @@ h3 {
     flex-direction: column;
   }
   .vis-img {
-    max-width: 500px;
+    max-width: 700px;
   }
 
-  .videos-container video {
+  .video-box {
     border-radius: 10px;
-    max-width: 500px;
+    max-width: 700px;
   }
 }
