@@ -42,14 +42,19 @@ function set_vis_title() {
 
   const now = new Date()
   now.setHours(now.getHours() - 1)
+  //round minutes to nearest 10 lower
+  const temp_minutes = now.getUTCMinutes()
+  now.setMinutes(temp_minutes - (temp_minutes % 10))
+  //set seconds equal to zero
+  now.setSeconds(0)
 
   // Get each time component in UTC
   const day = String(now.getUTCDate()).padStart(2, '0')
   const month = now.toLocaleString('default', { month: 'long' }) // "July"
   const year = now.getUTCFullYear()
   const hours = String(now.getUTCHours()).padStart(2, '0')
-  const minutes = String(now.getUTCMinutes()).padStart(2, '0')
-  const seconds = String(now.getUTCSeconds()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  const seconds = String(now.getSeconds()).padStart(2, '0')
 
   const formatted = `${day} ${month} ${year} ${hours}:${minutes}:${seconds} UTC time`
 
