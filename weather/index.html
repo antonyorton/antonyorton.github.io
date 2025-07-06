@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <title>JMA Satellite</title>
+  </head>
+  <body>
+    <h1 class="top-title">Eastern Australia Weather</h1>
+    <h3 class="vis-title" id="vis-title">Visible satellite</h3>
+    <div class="vis-container">
+      <img class="vis-img" src="#" alt="Image" id="vis-sat-1" />
+      <img class="vis-img" src="#" alt="Image" id="vis-sat-2" />
+      <img class="vis-img" src="#" alt="Image" id="vis-sat-3" />
+    </div>
+    <div class="videos-container">
+      <h3 class="video-title">Last 24hr of satellite data over Australia</h3>
+      <video controls>
+        <source
+          src="https://dnzz7nfw9p21e.cloudfront.net/weather-data/satellite/public-videos/aus_snd_.mp4"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <script src="./script.js"></script>
+  </body>
+</html>

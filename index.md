@@ -19,8 +19,6 @@ A notebook showing a mapping of the unit disk to an arbitary shaped polygon. The
 
 Future ideas include the generation of flow nets for confined groundwater flow beneath sheet piles.
 
-### [Southern hemisphere satellite imagery](https://ortons-weatherapp.vercel.app)
+### [Southern hemisphere satellite imagery](weather)
 
 This is an app I created which provides live 24hr satellite data based on images provided by the Japan Meteorological Agency.
-
-The app uses AWS lambda functions and runs in _look at me, no hands_ mode, meaning it needs little to no maintenance.
