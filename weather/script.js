@@ -56,9 +56,9 @@ function set_vis_title() {
   const minutes = String(now.getMinutes()).padStart(2, '0')
   const seconds = String(now.getSeconds()).padStart(2, '0')
 
-  const formatted = `${day} ${month} ${year} ${hours}:${minutes}:${seconds} UTC time`
+  const formatted = `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`
 
-  vis_title.textContent = `Visible satellite at ${formatted}`
+  vis_title.textContent = `Visible satellite ${formatted} UTC`
 }
 
 function set_vis_img_links() {
